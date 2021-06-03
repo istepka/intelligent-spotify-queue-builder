@@ -1,0 +1,4 @@
+.vscode
+.cache
+data_jsons/
+credentials.txt
