@@ -17,7 +17,7 @@ Further explanation will be provided later.
 
 ***
 #### Tech stack
-* Python 3.8.5
+* Python 3.9
 * Jupyter Notebook
 * Pandas
 * Spotipy
