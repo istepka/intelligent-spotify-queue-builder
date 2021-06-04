@@ -4,4 +4,5 @@ data_jsons/
 credentials.txt
 __pycache__/
 *.py[cod]
+*/__pycache__/
 

@@ -17,6 +17,7 @@ class Downloader:
         self.spotify = spotipy.Spotify(
             client_credentials_manager=spotipy.oauth2.SpotifyClientCredentials())
         
+       
         #user's spotify unique name. Must match real user id
         self.user_id = user_id
           
@@ -64,9 +65,9 @@ class Downloader:
 
 
 if __name__ == '__main__':
-    
     #set environmental variables required by authorization
-    #setup.prep_env_from_file('credentials.txt')
+    setup.prep_env_from_file('credentials.txt')
+  
 
     #intantiate downloader for user
     downloader = Downloader(setup.get_spotify_username()) 
