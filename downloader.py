@@ -9,12 +9,15 @@ class Downloader:
     '''Spotify data downloader.'''
 
     def __init__(self, user_id) -> None:
-        os.environ['SPOTIPY_CLIENT_ID'] = "14ec728c0d5b476a8389811d474a7172"
-        os.environ['SPOTIPY_CLIENT_SECRET'] = "12ec47de2b334c0984299a30e721557b"
+        #set environment variables if they don't already exist
+        if os.getenv('SPOTIPY_CLIENT_ID') == None:
+            setup.prep_env_from_file()
 
+        #spotipy client setup 
         self.spotify = spotipy.Spotify(
             client_credentials_manager=spotipy.oauth2.SpotifyClientCredentials())
         
+        #user's spotify unique name. Must match real user id
         self.user_id = user_id
           
 
@@ -26,6 +29,7 @@ class Downloader:
         with open(JSON_CATALOG + '/'+filename, 'w') as f:
             json.dump(data, f)
 
+
     def read_json_from_file(self, filename) -> Dict:
         '''Read json data from file.'''
         with open(JSON_CATALOG + '/' + filename, 'r') as f:
@@ -35,7 +39,8 @@ class Downloader:
     def fetch_all_user_playlists(self) -> Dict:
         '''Download all user's playlists (json).'''
         return self.spotify.user_playlists(self.user_id)
-            
+
+
     def fetch_single_track_by_name(self, name) -> Dict:
         '''Download track by its name (json). \n 
         e.g. \'Sonne\' '''
@@ -49,6 +54,10 @@ class Downloader:
 
         return None
 
+    def fetch_track_additional_info(self, track_id) -> Dict:
+        '''Download track additional audio features like loudness, energy, liveness etc.'''
+        features = self.spotify.audio_features(tracks=[track_id])
+        return features[0]
 
 
 
@@ -57,15 +66,18 @@ class Downloader:
 if __name__ == '__main__':
     
     #set environmental variables required by authorization
-    setup.prep_env_from_file('credentials.txt')
+    #setup.prep_env_from_file('credentials.txt')
 
     #intantiate downloader for user
-    downloader = Downloader('swagnacy') 
+    downloader = Downloader(setup.get_spotify_username()) 
 
     #download single Rammstein track and write it to file 
     track = downloader.fetch_single_track_by_name('Sonne')
-    downloader.write_json_to_file('sonne.json', track)
+    downloader.write_json_to_file('rammstein_sonne.json', track)
 
     #read track id from saved json
-    tack = downloader.read_json_from_file('sonne.json')
+    tack = downloader.read_json_from_file('rammstein_sonne.json')
     print( tack['id'] )
+
+    a = downloader.fetch_track_additional_info(tack['id'])
+    print(a.keys())
