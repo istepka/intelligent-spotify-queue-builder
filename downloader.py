@@ -27,12 +27,19 @@ class Downloader:
         '''Write data to file.'''
         assert '.' in filename, 'You should provide extension to your filename'
 
+        #check if directory exists
+        if not os.path.exists(f'./{JSON_CATALOG}'): 
+            os.mkdir(f'./{JSON_CATALOG}')
+
+        #save data
         with open(JSON_CATALOG + '/'+filename, 'w') as f:
             json.dump(data, f)
 
 
     def read_json_from_file(self, filename) -> Dict:
         '''Read json data from file.'''
+        assert os.path.exists(f'./{JSON_CATALOG}/{filename}'), 'File does not exist'
+
         with open(JSON_CATALOG + '/' + filename, 'r') as f:
             return json.load(f)
 

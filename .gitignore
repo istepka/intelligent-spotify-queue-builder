@@ -5,4 +5,5 @@ credentials.txt
 __pycache__/
 *.py[cod]
 */__pycache__/
+test_python.py
 
