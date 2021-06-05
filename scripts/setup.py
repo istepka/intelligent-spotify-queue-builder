@@ -15,8 +15,9 @@ def prep_env_from_file(filename='credentials.txt'):
         user_unique_spotify_name (not important within this function)\n
         client_id  \n
         client_secret'''
-        
-    with open(filename, 'r') as f:
+
+    
+    with open(__combine_absolute_path(filename), 'r') as f:
         _ = f.readline()
         client_id = f.readline()
         client_secret = f.readline()
@@ -29,8 +30,13 @@ def prep_env_from_file(filename='credentials.txt'):
 def get_spotify_username(filename='credentials.txt'):
     '''Get spotify unique username (id) from local txt file.\n
     First line of the file should contain this username.'''
-    with open(filename, 'r') as f:
+   
+    with open(__combine_absolute_path(filename), 'r') as f:
         name = f.readline().rstrip("\n")
     print('Username', name)
     return name
+
+
+def __combine_absolute_path(filename) -> str:
+    return os.getcwd() + "\\scripts\\" + filename
 

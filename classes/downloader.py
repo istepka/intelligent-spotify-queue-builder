@@ -1,6 +1,10 @@
-import os, json, spotipy
+import os, sys, json, spotipy
 from typing import Dict
-import setup
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from scripts import setup
+
+
 
 #Directory name where jsons are gonna be saved.  
 JSON_CATALOG = 'data_jsons' 
@@ -66,6 +70,23 @@ class Downloader:
         '''Download track additional audio features like loudness, energy, liveness etc.'''
         features = self.spotify.audio_features(tracks=[track_id])
         return features[0]
+
+
+
+    def fetch_tracks_by_custom_query(self, query, records=10, type="track", offset=0) -> Dict:
+        '''Download tracks found with custom query.'''
+        result = self.spotify.search(query, limit=records, offset=offset, type=type)
+
+        if not result: 
+            return None
+        else:
+            return result
+
+    def send_custom_query(self, query, records=10, type="track", offset=0) -> Dict:
+        '''Download with custom query.'''
+        return self.spotify.search(query, limit=records, offset=offset, type=type)
+
+   
 
 
 

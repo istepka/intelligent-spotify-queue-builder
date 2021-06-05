@@ -1,5 +1,7 @@
-from downloader import Downloader
-import setup
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from classes.downloader import Downloader
+from scripts import setup
 from typing import Dict
 
 
