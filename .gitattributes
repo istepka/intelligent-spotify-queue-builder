@@ -1,3 +1,2 @@
-*.ipynb text
-
-#*.ipynb linguist-documentation
+*.py linguist-language=python
+*.ipynb linguist-documentation
