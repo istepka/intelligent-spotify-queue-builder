@@ -38,5 +38,6 @@ def get_spotify_username(filename='credentials.txt'):
 
 
 def __combine_absolute_path(filename) -> str:
-    return os.getcwd() + "\\scripts\\" + filename
+    #return os.getcwd() + "\\scripts\\" + filename
+    return filename
 

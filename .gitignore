@@ -6,5 +6,5 @@ __pycache__/
 *.py[cod]
 */__pycache__/
 test_python.py
-*/Tracks*.csv
+*/Tracks_7*.csv
 

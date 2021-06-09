@@ -1,13 +1,17 @@
-## Spotify similar tracks queue builder
+## Spotify - similar vibe - queue builder
 ***
-#### Goal
-To create an app that is capable of creating Spotify queue which is built from tracks that have similar vibe to the music you play.  
-Further explanation will be provided later.
+#### Goal and motivation
+Spotify does a great job at creating custom playlists and recommending personal queues.  
+But for me, the lack of manual personalization is something that should definitely be changed. Often times I just want to vibe and listen to some music regardless of genre, artist, album etc, but Spotify constantly tries to prove me wrong, and recommend stuff from pretty closed area. 
+
+I want to create an app that will be capable of creating Spotify queues built from tracks that have similar vibe to the music you play no matter what genre they are or who is the artist.  
+
+Detailed explanation will be provided at the later stage of development.
 
 #### Project steps:
-1. Create data downloader that will be able to fetch data from Spotify API
-1. Fetch tracks data and create dataset. For now let's say we get a few thousand records
-1. Explore data, find correlations and understand how does this set works
+1. [DONE] Create data downloader that will be able to fetch data from Spotify API
+1. [CURRENT] Fetch tracks data and create dataset. For now let's say we get a few thousand records
+1. Explore, find correlations and understand the data
 1. Implement some kNN calssification and find out whether we can distinguish similar tracks
 1. (optional) experiment with different types of classification
 1. Build first queue builder
@@ -20,5 +24,6 @@ Further explanation will be provided later.
 * Python 3.9
 * Jupyter Notebook
 * Pandas
+* Matplotlib
 * Spotipy
  

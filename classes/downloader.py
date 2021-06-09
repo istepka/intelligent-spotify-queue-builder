@@ -1,7 +1,7 @@
 import os, sys, json, spotipy
 from typing import Dict
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scripts import setup
 
 
@@ -71,7 +71,15 @@ class Downloader:
         features = self.spotify.audio_features(tracks=[track_id])
         return features[0]
 
+    def fetch_tracks_additional_info(self, tracks_id) -> Dict:
+        '''Download tracks additional audio features like loudness, energy, liveness etc.\n
+        Return list of jsons'''
 
+        assert len(tracks_id) > 0, 'List should contain at least one entry'
+
+        features = self.spotify.audio_features(tracks=tracks_id)
+        return features
+    
 
     def fetch_tracks_by_custom_query(self, query, records=10, type="track", offset=0) -> Dict:
         '''Download tracks found with custom query.'''
