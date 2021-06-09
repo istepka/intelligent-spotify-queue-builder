@@ -36,6 +36,8 @@ class Track:
 
     def get_uri(self) -> str:
         return self.uri
+    def set_additional_info(self, features) -> None:
+        self.audio_features = features
 
     def load_additional_song_data(self, downloader=None) -> None:
         '''Download and load song characteristics like loudness, energy, liveness etc.'''
