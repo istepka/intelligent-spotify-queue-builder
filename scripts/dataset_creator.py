@@ -5,8 +5,9 @@ from scripts import setup
 from classes.tracks import Track
 
 
-def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):     
-
+def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200) -> str:     
+    '''Create full dataset. \n
+    Return name of the dataset.'''
 
     downloader = Downloader(setup.get_spotify_username())
 
@@ -31,6 +32,7 @@ def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):
                 raw_tracks += list( map( lambda x: (x.id, YEAR ,x.name),  tmp_tracks))
 
             YEAR -= 1
+            print(YEAR, 'downloaded')
 
 
         print('Downloaded:', len(raw_tracks))
@@ -48,12 +50,12 @@ def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):
 
         print(len(raw_jsons))
 
-        r = raw_jsons[:]
-        for item in r: 
-            for key in item.keys():
-                item[key] =   item[key] 
+       
+        # for item in r: 
+        #     for key in item.keys():
+        #         item[key] =   item[key] 
 
-        raw_features_df = pd.DataFrame.from_dict(r)
+        raw_features_df = pd.DataFrame.from_dict(raw_jsons)
         
 
         features_df = raw_features_df.iloc[:, 0:11]
@@ -66,6 +68,7 @@ def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):
 
     raw_tracks = download_base_data()
    
+    
 
     #Build proper dataframe
     data = pd.DataFrame( { 'Name': [i[2] for i in raw_tracks],
@@ -73,7 +76,9 @@ def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):
     'Year': [i[1] for i in raw_tracks]
     })
 
-    
+    csv_name_raw = f'./datasets/Tracks_{data.shape[0]}dp_y' + str(data['Year'].min()) + '-' +  str(data['Year'].max())+  '_raw.csv' 
+    data.to_csv(csv_name_raw)
+
     #merge additional features
     merged_df = download_features(data)
 
@@ -81,3 +86,6 @@ def create_dataset(starting_year=2021, how_many_years=32, tracks_per_year=200):
     #save to file
     csv_name = f'./datasets/Tracks_{data.shape[0]}dp_y' + str(data['Year'].min()) + '-' +  str(data['Year'].max())+  '_full.csv' 
     merged_df.to_csv(csv_name)
+
+
+    return csv_name

@@ -58,13 +58,23 @@ class Track:
         if not downloader:
             downloader= Downloader(setup.get_spotify_username()) 
 
-        #get currently saved data
-        dic = downloader.read_json_from_file(filename)
-        
 
-        #append audio features
-        if self.audio_features:     
+        dic = dict()
+
+        try:
+            #get currently saved data
+            dic = downloader.read_json_from_file(filename)
+        except:
+            dic['id'] = self.id 
+            dic['uri'] = self.uri
+            dic['external_url']= self.external_url 
+            dic['name']  = self.name 
+            dic['artist_name'] = self.artist_name 
+            dic['artist_id'] = self.artist_id 
+            dic['album_name']= self.album_name  
+            dic['album_id'] = self.album_id 
             dic['audio_features'] = self.audio_features
+
 
 
         #save

@@ -1,5 +1,6 @@
 import unittest
-import downloader, setup
+from classes import downloader
+from scripts import setup
 
 class TestDownloaderFunctions(unittest.TestCase):
 
