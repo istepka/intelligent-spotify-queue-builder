@@ -5,6 +5,7 @@ def prep_env(client_id, client_secret):
     '''Set environmental variables.'''
     os.environ['SPOTIPY_CLIENT_ID'] = client_id
     os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret
+    os.environ['SPOTIPY_REDIRECT_URI'] = 'https://github.com/iggyyy'
     print('Environmental variables set')
 
 
@@ -24,6 +25,7 @@ def prep_env_from_file(filename='credentials.txt'):
     
     os.environ['SPOTIPY_CLIENT_ID'] = client_id.strip("\n")
     os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret.strip("\n")
+    os.environ['SPOTIPY_REDIRECT_URI'] = 'https://github.com/iggyyy'
     print('Environmental variables set')
 
 
