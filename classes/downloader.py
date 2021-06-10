@@ -95,7 +95,9 @@ class Downloader:
         return self.spotify.search(query, limit=records, offset=offset, type=type)
 
    
-
+    def fetch_tracks_by_ids(self, id_list) -> Dict:
+        '''Download tracks by list of ids'''
+        return self.spotify.tracks(id_list)
 
 
 

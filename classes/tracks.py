@@ -39,6 +39,10 @@ class Track:
     def set_additional_info(self, features) -> None:
         self.audio_features = features
 
+    def convert_to_array_for_classification(self) -> list:
+        keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
+        return [ self.audio_features[k]  for k in keys ]
+
     def load_additional_song_data(self, downloader=None) -> None:
         '''Download and load song characteristics like loudness, energy, liveness etc.'''
         if not downloader:
@@ -56,6 +60,7 @@ class Track:
 
         #get currently saved data
         dic = downloader.read_json_from_file(filename)
+        
 
         #append audio features
         if self.audio_features:     
