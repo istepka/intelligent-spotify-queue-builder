@@ -10,8 +10,8 @@ Detailed explanation will be provided at the later stage of development.
 
 #### Project steps:
 1. [DONE] Create data downloader that will be able to fetch data from Spotify API
-1. [CURRENT] Fetch tracks data and create dataset. For now let's say we get a few thousand records
-1. Explore, find correlations and understand the data
+1. [DONE] Fetch tracks data and create dataset. For now let's say we get a few thousand records
+1. [CURRENT] Explore, find correlations and understand the data
 1. Implement some kNN calssification and find out whether we can distinguish similar tracks
 1. (optional) experiment with different types of classification
 1. Build first queue builder
