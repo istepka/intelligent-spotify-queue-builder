@@ -99,6 +99,9 @@ class Downloader:
         '''Download tracks by list of ids'''
         return self.spotify.tracks(id_list)
 
+    def fetch_track_by_id(self, _id) -> Dict:
+        '''Download tracks by list of ids'''
+        return self.spotify.track(_id)
 
 
 

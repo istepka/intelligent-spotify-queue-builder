@@ -1,3 +1,4 @@
+from logging import exception
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from classes.downloader import Downloader
@@ -9,9 +10,21 @@ from typing import Dict
 class Track:
     '''Track informations and processing.'''
 
-    def __init__(self, track: Dict) -> None:
+    def __init__(self, track: Dict, track_id=None) -> None:
         assert len( track.items() ) > 0, 'Track dictionary can\'t be empty'
         
+        if track:
+            self.init_values(track)
+        elif track_id:
+            track = self.load_basic_song_data(track_id)
+            self.init_values(track)
+        else:
+            exception('Cannot initialize Track')
+            
+
+       
+
+    def init_values(self, track:Dict):
         #init basic properties
         self.id = track['id']
         self.uri = track['uri']
@@ -49,6 +62,12 @@ class Track:
             downloader= Downloader(setup.get_spotify_username())  
         
         self.audio_features = downloader.fetch_track_additional_info(self.id)
+
+    def load_basic_song_data(self, _id, downloader=None) -> Dict:
+        if not downloader:
+            downloader= Downloader(setup.get_spotify_username()) 
+        
+        return downloader.fetch_track_by_id(_id)
 
 
     def save(self, filename='', downloader=None) -> None:
