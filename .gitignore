@@ -7,4 +7,6 @@ __pycache__/
 */__pycache__/
 test_python.py
 */Tracks_7*.csv
+app.py
+templates/
 

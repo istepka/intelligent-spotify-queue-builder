@@ -11,7 +11,7 @@ class Track:
     '''Track informations and processing.'''
 
     def __init__(self, track: Dict, track_id=None) -> None:
-        assert len( track.items() ) > 0, 'Track dictionary can\'t be empty'
+        assert track != None or track_id != None, 'You must pass at least one parameter'
         
         if track:
             self.init_values(track)
@@ -53,6 +53,8 @@ class Track:
         self.audio_features = features
 
     def convert_to_array_for_classification(self) -> list:
+        if not self.audio_features:
+            self.load_additional_song_data()
         keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
         return [ self.audio_features[k]  for k in keys ]
 

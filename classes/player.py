@@ -41,6 +41,9 @@ class SpotifyPlayer:
     def previous(self):
         self.spotify_client.previous_track()
 
+    # def get_current_playback(self):
+    #     print( self.spotify_client.current_playback() )
+
     
     
    

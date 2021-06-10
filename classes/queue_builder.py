@@ -1,3 +1,4 @@
+from sklearn import neighbors
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np 
@@ -57,6 +58,28 @@ class QueueBuilder:
             similar_tracks.append(  self.pd_data.iloc[i].Id )
 
         return similar_tracks
+
+
+
+    def create_basic_queue(self, track: Track, length=5) -> list[str]:
+        '''Create queue from track. \n
+        Return list of ids.'''
+        queue = list()
+        current_track = track
+        for i in range(length):
+            candidates = self.find_neigbors(current_track, n=10)
+            candidates = list(filter(lambda x: x != track.get_id() and x not in queue, candidates))
+        
+            queue.append( candidates[0] )
+            
+
+            current_track = Track(None, candidates[0])
+
+        return queue
+
+
+
+
 
 
     def test_classifier(self):
