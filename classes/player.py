@@ -27,9 +27,9 @@ class SpotifyPlayer:
 
     def add_track_to_queue(self, track:Track) -> None:
         '''Add track to queue.'''
-        self.add_to_queue(track.get_id())
+        self.add_track_to_queue_by_id(track.get_id())
 
-    def add_track_to_queue(self, _id:str) -> None:
+    def add_track_to_queue_by_id(self, _id:str) -> None:
         '''Add track to queue by id.'''
         self.spotify_client.add_to_queue(_id)
 
