@@ -25,6 +25,7 @@ class Track:
        
 
     def init_values(self, track:Dict):
+        '''Initialize basic Track properties.'''
         #init basic properties
         self.id = track['id']
         self.uri = track['uri']
@@ -45,14 +46,22 @@ class Track:
         return f'{self.artist_name} song \'{self.name}\' from album \'{self.album_name}\''
 
     def get_id(self) -> int:
+        '''Get track id.'''
         return self.id
 
     def get_uri(self) -> str:
+        '''Get track uri.'''
         return self.uri
     def set_additional_info(self, features) -> None:
+        '''Set track additional audio features property.'''
         self.audio_features = features
 
     def convert_to_array_for_classification(self) -> list:
+        '''
+        Convert audio features to array ready to pass into classification method.
+        
+        Return elementwise list of necessary properties. 
+        '''
         if not self.audio_features:
             self.load_additional_song_data()
         keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
@@ -66,6 +75,11 @@ class Track:
         self.audio_features = downloader.fetch_track_additional_info(self.id)
 
     def load_basic_song_data(self, _id, downloader=None) -> Dict:
+        '''
+        Download track's basic data.  
+
+        Return track in dictionary format.
+        '''
         if not downloader:
             downloader= Downloader(setup.get_spotify_username()) 
         
