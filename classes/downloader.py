@@ -14,7 +14,7 @@ class Downloader:
 
     def __init__(self, user_id) -> None:
         #set environment variables if they don't already exist
-        if os.getenv('SPOTIPY_CLIENT_ID') == None:
+        if os.getenv('SPOTIPY_CLIENT_ID') is None:
             setup.prep_env_from_file()
 
         #spotipy client setup 

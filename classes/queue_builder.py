@@ -64,6 +64,7 @@ class QueueBuilder:
     def create_basic_queue(self, track: Track, length=5) -> list[str]:
         '''Create queue from track. \n
         Return list of ids.'''
+        
         queue = list()
         current_track = track
         for i in range(length):

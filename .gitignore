@@ -9,4 +9,6 @@ test_python.py
 */Tracks_7*.csv
 app.py
 templates/
+datasets/datasets_batch/
+notes/
 
