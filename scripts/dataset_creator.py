@@ -1,3 +1,4 @@
+from typing import List
 import pandas as pd
 import numpy as np
 import os
@@ -33,11 +34,11 @@ class DatasetCreator():
             #concatenate
             frames = list()
             for f in filenames:
-                frames.append(pd.read_csv(f'./datasets/datasets_batch/{f}'))
-                merged_df = pd.concat(frames)
+                frames.append(pd.read_csv(f'./datasets/datasets_batch/{f}', index_col=0))
+                merged_df = pd.concat(frames,ignore_index=True)
 
             #save concatenated file
-            csv_name_raw = f'./datasets/TracksFull_{len(merged_df)}datapoints_{from_year}-{to_year}.csv' 
+            csv_name_raw = f'./datasets/TracksCombined_{len(merged_df)}datapoints_{from_year}-{to_year}.csv' 
             merged_df.to_csv(csv_name_raw)
             return csv_name_raw
 
