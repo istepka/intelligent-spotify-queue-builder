@@ -17,28 +17,15 @@ Factory.set_db(db)
 #Imports that rely on Factory variable: db
 from classes.data_access import DataAccess
 from classes.trackData import TrackData
+from scripts.ui_methods import search_for_track, build_que_by_track
 
 
-def search_for_track(name):
-    '''Search for the track'''
-    #setup which requires properly created 'credentials.txt' file
-    setup.prep_env_from_file()
-    username  = setup.get_spotify_username()
-
-    #create downloader instance for user
-    downloader = Downloader(username)
-
-    #TODO search in database and then eventually fetch from spoti
-    #download desired track data by name
-    track = Track(downloader.fetch_single_track_by_name(name))
-    td = TrackData(id=track.id, name=track.name, artist=track.artist_name, album=track.album_name)
-    return td
    
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        task_content = request.form['search_track']
+        task_content = request.form['track_name']
 
         if len(task_content) > 0:
             try: 
@@ -51,7 +38,34 @@ def index():
         tracks = DataAccess.get_all()
         return render_template('index.html', tracks=tracks)
     else:
+        tracks = DataAccess.get_all()
+        print(tracks)
+        return render_template('index.html', tracks=tracks)
+
+@app.route('/build', methods=['POST'])
+def build():
+    if request.method == 'POST':
+        task_content = request.form['track_name']
+
+        #TODO building queue
+        queue = build_que_by_track(task_content, {})
+        tracks = DataAccess.get_by_ids(queue)
+
+        return render_template('index.html', tracks=tracks)
+    else:
         return render_template('index.html')
+    # import pandas as pd
+    # df = pd.read_csv('./datasets/Tracks_14400dp_y1990-2021_full.csv')['Id']
+    # for i, d in enumerate(df):
+    #     track = Track(track_id=d)
+    #     td = TrackData(id=track.id, name=track.name, artist=track.artist_name, album=track.album_name)
+    #     DataAccess.single_insert(td)
+
+
+    #     if i % 100 == 0:
+    #         print(f'{i}/{len(df)}')
+    # return render_template('index.html')
+
 
 @app.route('/play/<string:id>')
 def play(id):
@@ -60,9 +74,17 @@ def play(id):
 
     return render_template('index.html')
 
+@app.route('/delete/<string:id>')
+def delete(id):
+    DataAccess.delete(id)
+    return render_template('index.html')
+
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+   
 
    

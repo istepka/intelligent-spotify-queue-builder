@@ -10,7 +10,7 @@ from typing import Dict
 class Track:
     '''Track informations and processing.'''
 
-    def __init__(self, track: Dict, track_id=None) -> None:
+    def __init__(self, track: Dict=None, track_id=None) -> None:
         assert track != None or track_id != None, 'You must pass at least one parameter'
         
         if track:

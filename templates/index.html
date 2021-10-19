@@ -5,42 +5,46 @@
 {% endblock %}
 
 {% block body%}
-<h1 style="text-align: center">Similar tracks finder</h1>
+<h1 style="text-align: center">SIMILAR TRACKS FINDER</h1>
 
 <div class="content">
 
-    <div>
-    
-    <p style="text-align: left">Search for your track</p>
+    <div id="search_div">
+        <p style="text-align: left">ENTER THE NAME OF THE TRACK</p>
 
-    <form action="/" method="POST">
-        <input type="text" name="search_track" id="search_track">
-        <input type="submit" value="Search">
-    </form>
+        <form action="/build" method="POST">
+            <input type="text" name="track_name" id="track_name">
+            <input type="submit" value="BUILD" id="submit_btn">
+        </form>
     </div>
 
     {% if tracks|length > 0 %}
     <table>
-        <tr>
-            <th style="display:none;">Id</th>
-            <th>Name</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Actions</th>
-        </tr>
-        <tr>
-            {% for track in tracks %}
+       
             <tr>
-                <td style="display:none;">{{track.id}}</td>
-                <td>{{track.name}}</td>
-                <td>{{track.artist}}</td>
-                <td>{{track.album}}</td>
-                <td>
-                    <a href="/play/{{track.id}}">Play</a>
-                </td>
+                <th style="display:none;">Id</th>
+                <th>Name</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Actions</th>
             </tr>
-            {% endfor %}
-        </tr>
+       
+        
+            <tr>
+                {% for track in tracks %}
+                <tr>
+                    <td style="display:none;">{{track.id}}</td>
+                    <td>{{track.name}}</td>
+                    <td>{{track.artist}}</td>
+                    <td>{{track.album}}</td>
+                    <td>
+                        <a href="/play/{{track.id}}">play</a>
+                        <a href="/delete/{{track.id}}">delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tr>
+        
     </table>
     {% endif %}
 
