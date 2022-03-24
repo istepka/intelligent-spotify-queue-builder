@@ -67,7 +67,7 @@ class DatasetCreator():
                                 type='track', offset=k*RECORDS_PER_REQUEST + 1)
                     #combine to larger dataset
                     tmp_tracks = list( map( lambda x: Track(x), data['tracks']['items'] ) )
-                    raw_tracks += list( map( lambda x: (x.id, YEAR ,x.name),  tmp_tracks))
+                    raw_tracks += list( map( lambda x: (x.id, YEAR ,x.name, x.artist_name, x.artist_id),  tmp_tracks))
 
                 YEAR -= 1
                 print(YEAR, 'downloaded')
@@ -87,44 +87,63 @@ class DatasetCreator():
 
             print(len(raw_jsons))
 
+            to_del = 0
             #search for bad rows
             none_rows = set()
             for i, r in enumerate(raw_jsons):
-                if not r:
-                    print('none', i)
+                if not r or type(r) is not dict or len(r) != len(raw_jsons[0]):
+                    print('none', i, r)
                     none_rows.add(i)
-            
+                    to_del+=1
+                else:
+                    try:
+                        r.keys()
+                    except:
+                        print(f'BAD {i}: {type(r)}, {r}')
+                        none_rows.add(i)
+                        to_del+=1
+            print(f'To delete {to_del}')
+
             #remove bad rows from data and raw_data
             data.drop(index=list(none_rows), inplace=True)
             for i in none_rows:
                 del raw_jsons[i]
+            print(f'After deletion {len(raw_jsons)}')
             
+            #print(raw_jsons)
             #extract features
-            raw_features_df = pd.DataFrame.from_dict(raw_jsons)
-            features_df = raw_features_df.iloc[:, 0:11]
-        
+            raw_features_df = pd.DataFrame.from_records(raw_jsons)
+            print('Done')
+            features_df = raw_features_df[['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness',
+                                            'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo',
+                                            'duration_ms']]
+            print(raw_features_df.columns)
+
             #merge basic data with features
             merged_df = pd.concat([data, features_df], axis=1)
             return merged_df
         
 
         raw_tracks = download_base_data()
+        print(raw_tracks)
     
         #Build proper dataframe
         data = pd.DataFrame( { 'Name': [i[2] for i in raw_tracks],
         'Id': [i[0] for i in raw_tracks],
-        'Year': [i[1] for i in raw_tracks]
+        'Year': [i[1] for i in raw_tracks],
+        'Artist': [i[3] for i in raw_tracks],
+        'Artist_id': [i[4] for i in raw_tracks]
         })
 
         #save basic data to file
         csv_name_raw = f'./datasets/datasets_batch/Tracks_{len(raw_tracks)}dp_y' + str(data['Year'].min()) + '-' +  str(data['Year'].max())+  '_raw.csv' 
-        data.to_csv(csv_name_raw)
+        data.to_csv(csv_name_raw, index=False)
 
         #merge additional features
         merged_df = download_features(data)
 
         #save to file
         csv_name = f'./datasets/datasets_batch/Tracks_{len(raw_tracks)}dp_y' + str(data['Year'].min()) + '-' +  str(data['Year'].max())+  '_full.csv' 
-        merged_df.to_csv(csv_name)
+        merged_df.to_csv(csv_name, index=False)
 
         return csv_name

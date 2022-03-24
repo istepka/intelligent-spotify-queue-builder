@@ -15,7 +15,16 @@ body, html {
     margin-top: 10vh;
 }
 
-table, td, th {
+table{
+    table-layout: auto;
+    border: 3px solid rgb(255, 255, 255);
+}
+
+.absorbing-column{
+    width: 40%;
+}
+
+td, th {
     border: 2px solid rgb(255, 255, 255);
 }
 
@@ -38,6 +47,16 @@ td {
 
 .form {
     margin-top: 0px;
+}
+
+.form_div {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    align-items: center;
 }
 
 #content {

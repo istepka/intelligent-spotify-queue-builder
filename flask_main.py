@@ -1,3 +1,4 @@
+from classes.queue_builder import QueueBuilder
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -17,9 +18,10 @@ Factory.set_db(db)
 #Imports that rely on Factory variable: db
 from classes.data_access import DataAccess
 from classes.trackData import TrackData
-from scripts.ui_methods import search_for_track, build_que_by_track
+from scripts.ui_methods import add_tracks_to_real_queue, search_for_track, build_que_by_track
 
-
+queBuilder = QueueBuilder()
+print(f'Queue builder initialized')
    
 
 @app.route('/', methods=['POST', 'GET'])
@@ -29,7 +31,7 @@ def index():
 
         if len(task_content) > 0:
             try: 
-                td = search_for_track(task_content)
+                td = search_for_track(task_content, 'name')
                 DataAccess.single_insert(td)
             except:
                 return 'There was an issue searching for your track'
@@ -47,9 +49,36 @@ def build():
     if request.method == 'POST':
         task_content = request.form['track_name']
 
+        try:
+            checkbox: bool = request.form['checkbox_autobuild']
+        except:
+            checkbox = False
+
+        print(checkbox)
+
         #TODO building queue
-        queue = build_que_by_track(task_content, {})
+        queue = build_que_by_track(task_content, {'length': 10}, qb=queBuilder)
         tracks = DataAccess.get_by_ids(queue)
+        found_ids = [i.id for i in tracks]
+
+        #Check if track was in db. Otherwise fetch.
+        for track in queue:
+            if track not in found_ids:
+                try: 
+                    td = search_for_track(track, 'id')
+                    DataAccess.single_insert(td)
+                    tracks.append(td)
+                except:
+                    print(f'Cannot find {track} in spotify db')
+
+            
+
+        print(f'Q: {queue}\nT:{tracks}')
+
+
+
+        if checkbox:
+            add_tracks_to_real_queue(queue)
 
         return render_template('index.html', tracks=tracks)
     else:

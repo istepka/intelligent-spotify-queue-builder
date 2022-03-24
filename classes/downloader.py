@@ -103,6 +103,20 @@ class Downloader:
         '''Download tracks by list of ids'''
         return self.spotify.track(_id)
 
+    def get_artist(self, artist_id) -> Dict:
+        '''Get artist info'''
+        return self.spotify.artist(artist_id)
+    
+    def get_related_artists(self, artist_id) -> Dict:
+        '''Get related artist'''
+        return self.spotify.artist_related_artists(artist_id)
+
+    def get_artist_top_tracks(self, artist_id, country='US') -> Dict:
+        '''Get artist 10 top tracks in country'''
+        return self.spotify.artist_top_tracks(artist_id, country)
+
+    
+
 
 
 if __name__ == '__main__':

@@ -35,6 +35,7 @@ class Track:
         self.artist_id = track['artists'][0]['id']
         self.album_name = track['album']['name']
         self.album_id = track['album']['id']
+        self.year = track['album']['release_date'][0:4]
 
         #init aditional properties
         self.audio_features = track['audio_features'] if 'audio_features' in track else None  
@@ -64,7 +65,7 @@ class Track:
         '''
         if not self.audio_features:
             self.load_additional_song_data()
-        keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
+        keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration_ms']
         return [ self.audio_features[k]  for k in keys ]
 
     def load_additional_song_data(self, downloader=None) -> None:
@@ -125,6 +126,12 @@ class Track:
 if __name__ == '__main__':
     d = Downloader(setup.get_spotify_username())
    
-    sonne = Track(d.read_json_from_file('sonne.json'))
+    sonne = Track(d.fetch_single_track_by_name('sonne'))
     sonne.load_additional_song_data(d)
-    sonne.save()
+    print(sonne.convert_to_array_for_classification())
+    print(sonne)
+    print(d.fetch_single_track_by_name('sonne'))
+    sonne.load_additional_song_data(d)
+    print(sonne.audio_features)
+    print(sonne.year)
+    #sonne.save()

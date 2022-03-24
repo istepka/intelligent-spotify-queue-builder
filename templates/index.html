@@ -1,20 +1,37 @@
 {% extends 'base.html' %}
 
 {% block head%}
-<title>Tasks</title>
+<title>Spotify Queue Builder</title>
 {% endblock %}
 
 {% block body%}
-<h1 style="text-align: center">SIMILAR TRACKS FINDER</h1>
+<h1 style="text-align: center">Intelligent queue builder for Spotify </h1>
 
 <div class="content">
 
     <div id="search_div">
-        <p style="text-align: left">ENTER THE NAME OF THE TRACK</p>
+        <p style="text-align: left"></p>
 
         <form action="/build" method="POST">
+            <div class="form_div">
             <input type="text" name="track_name" id="track_name">
             <input type="submit" value="BUILD" id="submit_btn">
+
+            </div>
+
+            <div class="form_div">
+            <label for="checkbox_autobuild">Auto add to real player</label>
+            <input type="checkbox" name="checkbox_autobuild" id="checkbox_autobuild" checked>
+            </div>
+
+            <div class="form_div">
+            <label for="select_mode">Mode</label>
+            <select id="select_mode" name="select_mode">
+                <option value="Major">Major</option>
+                <option value="Minor">Minor</option>
+                <option value="None">Doesn't matter</option>
+              </select>
+            </div>
         </form>
     </div>
 
@@ -23,9 +40,9 @@
        
             <tr>
                 <th style="display:none;">Id</th>
-                <th>Name</th>
-                <th>Artist</th>
-                <th>Album</th>
+                <th class="absorbing-column">Name</th>
+                <th class="absorbing-column">Artist</th>
+                <th class="absorbing-column">Album</th>
                 <th>Actions</th>
             </tr>
        
@@ -33,7 +50,7 @@
             <tr>
                 {% for track in tracks %}
                 <tr>
-                    <td style="display:none;">{{track.id}}</td>
+                    <td style="display:none">{{track.id}}</td>
                     <td>{{track.name}}</td>
                     <td>{{track.artist}}</td>
                     <td>{{track.album}}</td>
