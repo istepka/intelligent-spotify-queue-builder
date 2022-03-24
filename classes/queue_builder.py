@@ -22,12 +22,12 @@ class QueueBuilder:
         self.pd_data.dropna(axis=0, inplace=True)
         print(self.pd_data.columns)
 
-        self.columns_to_take = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness',
-                            'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo',
-                                            'duration_ms']
+        self.columns_to_drop = ['Name', 'Id', 'Artist', 'Artist_id', 'duration_ms'] # = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness',
+                            #'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo',
+                             #               'duration_ms']
 
         self.labels = self.pd_data.keys()
-        self.data =  self.pd_data[self.columns_to_take].to_numpy()
+        self.data =  self.pd_data.drop(self.columns_to_drop, axis=1).to_numpy()
         self.neighbors_classifier = None
         self.k_neighbors = 12
 
@@ -59,8 +59,15 @@ class QueueBuilder:
     def fit(self):
         '''Fit kNN classifier.'''
         print(f'Starting kNN fit')
-        self.neighbors_classifier = NearestNeighbors(n_neighbors=self.k_neighbors, 
+        try:
+            with open("knn.pkl", "rb") as f:
+                self.neighbors_classifier = pickle.load(f)
+        except:
+            self.neighbors_classifier = NearestNeighbors(n_neighbors=self.k_neighbors, 
                                         algorithm='ball_tree').fit(self.normalized_data)
+            with open("knn.pkl", "wb") as f:
+                pickle.dump(self.clustering_model, f)
+
         distances, indices = self.neighbors_classifier.kneighbors(self.normalized_data)
 
         #print(distances, indices)
@@ -99,6 +106,9 @@ class QueueBuilder:
 
         return similar_tracks
 
+    def retrieve_dummies_from_genre(self, genre):
+
+
 
 
     def create_basic_queue(self, track: Track, length=5) -> list[str]:
@@ -106,7 +116,11 @@ class QueueBuilder:
         Return list of ids.'''
 
         #['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'],
+        track_df = track.get_dataframe_for_classification()
+        ZROBIC DUMMIES DLA GENRE
+
         track_array = np.array( track.convert_to_array_for_classification() )
+
         print(track_array.shape)
         track_array = self.scaler.transform([track_array])
 
@@ -117,7 +131,7 @@ class QueueBuilder:
         self.data_trim = self.data_trim.drop(['cluster'], axis=1)
         print(f'New df = {self.data_trim.shape} {self.data_trim.columns}')
         #self.labels = self.pd_data.keys()
-        self.data =  self.data_trim[self.columns_to_take].to_numpy()
+        self.data =  self.data_trim.drop(self.columns_to_drop, axis=1).to_numpy()
         #print(f'Labels: {self.labels.shape} {self.labels}')
         print(f'Data: {self.data.shape}')
         self.normalized_data =  self.normalize_data()

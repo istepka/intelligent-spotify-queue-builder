@@ -1,5 +1,5 @@
 import os, sys, json, spotipy
-from typing import Dict
+from typing import Dict, List
 
 #sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scripts import setup
@@ -115,7 +115,19 @@ class Downloader:
         '''Get artist 10 top tracks in country'''
         return self.spotify.artist_top_tracks(artist_id, country)
 
+    def get_genres_for_artist(self, artist_id) -> List[str]:
+        '''Get artist genres'''
+        return self.get_artist(artist_id)['genres']   
+
+    def get_all_avaliable_genres(self) -> List[str]:
+        '''Get all avaliable genres in spotify'''
+        return self.spotify.recommendation_genre_seeds()['genres'] 
     
+    def get_genres_for_artists(self, list_artist_id) -> List[str]:
+        genres = []
+        for e in self.spotify.artists(list_artist_id)['artists']:
+            genres.append(e['genres'])
+        return genres
 
 
 

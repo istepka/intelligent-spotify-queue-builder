@@ -1,5 +1,8 @@
 from logging import exception
 import sys, os
+from turtle import down
+
+import pandas as pd
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from classes.downloader import Downloader
 from scripts import setup
@@ -36,6 +39,8 @@ class Track:
         self.album_name = track['album']['name']
         self.album_id = track['album']['id']
         self.year = track['album']['release_date'][0:4]
+        self.explicit = track['explicit']
+        #self.genres = track['artists'][0]['genres']
 
         #init aditional properties
         self.audio_features = track['audio_features'] if 'audio_features' in track else None  
@@ -65,8 +70,21 @@ class Track:
         '''
         if not self.audio_features:
             self.load_additional_song_data()
-        keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration_ms']
-        return [ self.audio_features[k]  for k in keys ]
+        keys = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo']
+        return [self.year] + [ self.audio_features[k]  for k in keys ] + [self.genre]
+
+    def get_dataframe_for_classification(self) -> pd.DataFrame:
+        if not self.audio_features:
+            self.load_additional_song_data()
+        keys = ['Year', 'danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'genre']
+        
+        df = pd.DataFrame(columns=keys)
+        df['Year'] = [self.year]
+        df['genre'] = [self.genre]
+        for k in keys:
+            if k in self.audio_features:
+                df[k] = self.audio_features[k]
+        return df        
 
     def load_additional_song_data(self, downloader=None) -> None:
         '''Download and load song characteristics like loudness, energy, liveness etc.'''
@@ -74,6 +92,12 @@ class Track:
             downloader= Downloader(setup.get_spotify_username())  
         
         self.audio_features = downloader.fetch_track_additional_info(self.id)
+        self.genres = downloader.get_genres_for_artist(self.artist_id)
+        
+        if len(self.genres) > 0:
+            self.genre = self.genres[0]
+        else:
+            self.genre = 'none'
 
     def load_basic_song_data(self, _id, downloader=None) -> Dict:
         '''
