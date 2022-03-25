@@ -8,6 +8,7 @@ from scripts import setup
 from classes.downloader import Downloader
 from classes.tracks import Track
 from classes.player import SpotifyPlayer
+import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///trackData.db'
@@ -38,11 +39,13 @@ def index():
 
         #tracks = TrackData.query.order_by(TrackData.name).all()
         tracks = DataAccess.get_all()
+        
         return render_template('index.html', tracks=tracks)
     else:
         tracks = DataAccess.get_all()
-        print(tracks)
-        return render_template('index.html', tracks=tracks)
+        #print(tracks)
+        random.shuffle(tracks)
+        return render_template('index.html', tracks=tracks[0:50])
 
 @app.route('/build', methods=['POST'])
 def build():
@@ -99,15 +102,16 @@ def build():
 @app.route('/play/<string:id>')
 def play(id):
     player = SpotifyPlayer(setup.get_spotify_username())
+    player.play_now(id)
+
+    return render_template('index.html')
+
+@app.route('/queue/<string:id>')
+def queue(id):
+    player = SpotifyPlayer(setup.get_spotify_username())
     player.add_track_to_queue_by_id(id)
 
     return render_template('index.html')
-
-@app.route('/delete/<string:id>')
-def delete(id):
-    DataAccess.delete(id)
-    return render_template('index.html')
-
 
 
 if __name__ == '__main__':

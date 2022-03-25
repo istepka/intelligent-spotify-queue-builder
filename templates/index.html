@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body%}
-<h1 style="text-align: center">Intelligent queue builder for Spotify </h1>
+<a style="color:white;  text-decoration: none" href="/">
+<h1 style="text-align: center"> Queue builder for Spotify </h1>
+</a>
 
 <div class="content">
 
@@ -21,17 +23,17 @@
 
             <div class="form_div">
             <label for="checkbox_autobuild">Auto add to real player</label>
-            <input type="checkbox" name="checkbox_autobuild" id="checkbox_autobuild" checked>
+            <input style="cursor:pointer;text-align:center" type="checkbox" name="checkbox_autobuild" id="checkbox_autobuild" checked>
             </div>
 
-            <div class="form_div">
+            <!-- <div class="form_div">
             <label for="select_mode">Mode</label>
             <select id="select_mode" name="select_mode">
                 <option value="Major">Major</option>
                 <option value="Minor">Minor</option>
                 <option value="None">Doesn't matter</option>
               </select>
-            </div>
+            </div> -->
         </form>
     </div>
 
@@ -54,9 +56,10 @@
                     <td>{{track.name}}</td>
                     <td>{{track.artist}}</td>
                     <td>{{track.album}}</td>
-                    <td>
-                        <a href="/play/{{track.id}}">play</a>
-                        <a href="/delete/{{track.id}}">delete</a>
+                    <td style="min-width: 100px;">
+                        <a style="color:white" href="/play/{{track.id}}">play</a>
+                        <div style="min-height: 5px;"></div>
+                        <a style="color:white" href="/queue/{{track.id}}">queue</a>
                     </td>
                 </tr>
                 {% endfor %}

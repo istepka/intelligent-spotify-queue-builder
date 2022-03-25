@@ -78,6 +78,7 @@ input#submit_btn{
     opacity: 0.5;
     background-color: white;
     font-weight: bold;
+    cursor:pointer;
 }
 
 #search_div{

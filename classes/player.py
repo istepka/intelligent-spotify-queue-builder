@@ -49,6 +49,14 @@ class SpotifyPlayer:
         '''Go back to the previous track.'''
         self.spotify_client.previous_track()
 
+    def get_current(self) -> None:
+        '''Get currently played track'''
+        self.spotify.current_playback()
+    
+    def play_now(self, id) -> None:
+        '''Start playing track'''
+        self.spotify_client.start_playback(id)
+
     
 
     

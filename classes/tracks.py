@@ -38,7 +38,7 @@ class Track:
         self.artist_id = track['artists'][0]['id']
         self.album_name = track['album']['name']
         self.album_id = track['album']['id']
-        self.year = track['album']['release_date'][0:4]
+        self.year = int(track['album']['release_date'][0:4])
         self.explicit = track['explicit']
         #self.genres = track['artists'][0]['genres']
 
@@ -76,7 +76,8 @@ class Track:
     def get_dataframe_for_classification(self) -> pd.DataFrame:
         if not self.audio_features:
             self.load_additional_song_data()
-        keys = ['Year', 'danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'genre']
+        keys = ['Year', 'danceability', 'energy', 'key', 'loudness', 'mode', \
+            'speechiness','acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'genre', 'duration_ms']
         
         df = pd.DataFrame(columns=keys)
         df['Year'] = [self.year]
@@ -84,7 +85,27 @@ class Track:
         for k in keys:
             if k in self.audio_features:
                 df[k] = self.audio_features[k]
-        return df        
+
+        df['is_long'] = df['duration_ms'] > df['duration_ms'].quantile(0.90)
+        df['is_short'] = df['duration_ms'] < df['duration_ms'].quantile(0.05)
+
+        df['under70s'] = df['Year'] < 1970
+        df['70s'] = (df['Year'] >= 1970) & (df['Year'] < 1980)
+        df['80s'] = (df['Year'] >= 1980) & (df['Year'] < 1990)
+        df['90s'] = (df['Year'] >= 1990) & (df['Year'] < 2000)
+        df['00s'] = (df['Year'] >= 2000) & (df['Year'] < 2010)
+        df['10s'] = (df['Year'] >= 2010) & (df['Year'] < 2020)
+        df['20s'] = df['Year'] >= 2020 
+
+        sel_genres = ['rock', 'metal', 'classical', 'progressive', 'pop', 'r&b', 'hop',\
+             'latin', 'country', 'electr', 'punk', 'dance']
+        for s in sel_genres:
+            df[s] = df['genre'].apply(lambda x: s in str.lower(x))
+
+        df = df.drop(['Year', 'genre', 'duration_ms'], axis=1)
+
+        return df    
+             
 
     def load_additional_song_data(self, downloader=None) -> None:
         '''Download and load song characteristics like loudness, energy, liveness etc.'''
