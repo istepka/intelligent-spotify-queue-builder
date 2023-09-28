@@ -7,6 +7,9 @@ But for me, the lack of manual personalization is something that should definite
 This app is meant to be capable of creating Spotify queues built from tracks that have similar vibe to the music you play no matter what genre they are or who is the artist.  
 
 
+Below is an output of a query ran for the Guns'n Roses "Welcome to the jungle":
+![UI example](notes/ui.png)
+
 ### Project steps:
 1. `[DONE]` Create data downloader that will be able to fetch data from Spotify API
 1. `[DONE]` Fetch tracks data and create dataset. For now let's say we get a few thousand records
